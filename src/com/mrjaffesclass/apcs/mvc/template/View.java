@@ -53,7 +53,7 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         if (messageName.equals("tie")) {
             gameStatus.setText("Game End in a Tie");
         }
-        if (messageName.equals("invaldMove")) {
+        if (messageName.equals("invalidMove")) {
             gameStatus.setText("Invalid Move");
         }
     }
