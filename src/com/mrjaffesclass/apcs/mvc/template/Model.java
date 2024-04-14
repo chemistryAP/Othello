@@ -63,7 +63,7 @@ public class Model implements MessageHandler {
                         }
                     }
                 }
-                if (this.gameOver) {
+                if (!this.gameOver) {
                     if (this.whoseMove) {
                         this.mvcMessaging.notify("xMove", this);
                     }
