@@ -10,7 +10,6 @@ public class Model implements MessageHandler {
     private boolean gameOver;
     private ArrayList<String> possibleCords = new ArrayList<>();
     private String[][] board;
-    private int movesMade = 0;
 
     public Model(Messenger messages) {
         mvcMessaging = messages;
@@ -37,8 +36,6 @@ public class Model implements MessageHandler {
             if (!possibleCords.isEmpty()) {
                 if (containsCord(Integer.toString(row * 10 + col))) {
                     placeMove(row, col);
-                    this.movesMade++;
-                    System.out.println(this.movesMade);
                     this.whoseMove = !this.whoseMove;
                     possibleMoves();
                     boardChange();
@@ -73,7 +70,7 @@ public class Model implements MessageHandler {
                     this.mvcMessaging.notify("oMove", this);
                 }
             }
-            if (this.movesMade == 64) {
+            if (getBoardVariables() == 64) {
                 if (this.getWinner().equals("O")) {
                     oWin();
                 } else if (this.getWinner().equals("X")) {
@@ -236,7 +233,6 @@ public class Model implements MessageHandler {
         this.board[4][3] = "X";
         this.whoseMove = false;
         this.gameOver = false;
-        this.movesMade = 0;
         possibleMoves();
         boardChange();
     }
@@ -263,5 +259,17 @@ public class Model implements MessageHandler {
             }
         }
         return false;
+    }
+    
+    public int getBoardVariables() {
+        int count = 0;
+        for (String[] s : board) {
+            for (String x: s) {
+                if (!x.equals("")) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 }
