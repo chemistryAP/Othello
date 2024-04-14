@@ -101,7 +101,7 @@ public class Model implements MessageHandler {
                     int DBRVector = row, DRBVector = col, finalDBRVector = -1, finalDRBVector = -1;
                     int DBLVector = row, DLBVector = col, finalDBLVector = -1, finalDLBVector = -1;
                     while (!board[upVector][col].equals("") && upVector > 0) {
-                        if (board[upVector][col].equals(opponent)) {
+                        if (board[upVector][col].equals(opponent) && board[upVector - 1][col].equals("")) {
                             finalUpVector = upVector - 1;
 
                         }
@@ -111,7 +111,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(finalUpVector * 10 + col));
                     }
                     while (!board[downVector][col].equals("") && downVector < 7) {
-                        if (board[downVector][col].equals(opponent)) {
+                        if (board[downVector][col].equals(opponent) && board[downVector + 1][col].equals("")) {
                             finalDownVector = downVector + 1;
                         }
                         downVector++;
@@ -120,7 +120,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(finalDownVector * 10 + col));
                     }
                     while (!board[row][leftVector].equals("") && leftVector > 0) {
-                        if (board[row][leftVector].equals(opponent)) {
+                        if (board[row][leftVector].equals(opponent) && board[row][leftVector - 1].equals("")) {
                             finalLeftVector = leftVector - 1;
 
                         }
@@ -130,7 +130,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(row * 10 + finalLeftVector));
                     }
                     while (!board[row][rightVector].equals("") && rightVector < 7) {
-                        if (board[row][rightVector].equals(opponent)) {
+                        if (board[row][rightVector].equals(opponent) && board[row][rightVector + 1].equals("")) {
                             finalRightVector = rightVector + 1;
                         }
                         rightVector++;
@@ -139,7 +139,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(row * 10 + finalRightVector));
                     }
                     while (!board[DURVector][DRUVector].equals("") && DURVector > 0 && DRUVector < 7) {
-                        if (board[DURVector][DRUVector].equals(opponent)) {
+                        if (board[DURVector][DRUVector].equals(opponent)  && board[DURVector - 1][ DRUVector + 1].equals("")) {
                             finalDURVector = DURVector - 1;
                             finalDRUVector = DRUVector + 1;
                         }
@@ -150,7 +150,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(finalDURVector * 10 + finalDRUVector));
                     }
                     while (!board[DULVector][DLUVector].equals("") && DULVector > 0 && DLUVector > 0) {
-                        if (board[DULVector][DLUVector].equals(opponent)) {
+                        if (board[DULVector][DLUVector].equals(opponent)  && board[DULVector - 1][DLUVector - 1].equals("")) {
                             finalDULVector = DULVector - 1;
                             finalDLUVector = DLUVector - 1;
                         }
@@ -161,7 +161,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(finalDULVector * 10 + finalDLUVector));
                     }
                     while (!board[DBRVector][DRBVector].equals("") && DBRVector < 7 && DRBVector < 7) {
-                        if (board[DBRVector][DRBVector].equals(opponent)) {
+                        if (board[DBRVector][DRBVector].equals(opponent)  && board[DBRVector + 1][DRBVector + 1].equals("")) {
                             finalDBRVector = DBRVector + 1;
                             finalDRBVector = DRBVector + 1;
                         }
@@ -173,7 +173,7 @@ public class Model implements MessageHandler {
                     }
 
                     while (!board[DBLVector][DLBVector].equals("") && DBLVector < 7 && DLBVector > 0) {
-                        if (board[DBLVector][DLBVector].equals(opponent)) {
+                        if (board[DBLVector][DLBVector].equals(opponent)  && board[DBLVector + 1][DLBVector - 1].equals("")) {
                             finalDBLVector = DBLVector + 1;
                             finalDLBVector = DLBVector - 1;
                         }
@@ -190,6 +190,7 @@ public class Model implements MessageHandler {
 
     public void placeMove(int row, int col) {
         String currentPlayer = (this.whoseMove) ? "X" : "O";
+        board[row][col] = currentPlayer;
     }
 
     public void xWin() {
