@@ -63,11 +63,13 @@ public class Model implements MessageHandler {
                         }
                     }
                 }
-                if (this.whoseMove) {
-                    this.mvcMessaging.notify("xMove", this);
-                }
-                if (!this.whoseMove) {
-                    this.mvcMessaging.notify("oMove", this);
+                if (this.gameOver) {
+                    if (this.whoseMove) {
+                        this.mvcMessaging.notify("xMove", this);
+                    }
+                    if (!this.whoseMove) {
+                        this.mvcMessaging.notify("oMove", this);
+                    }
                 }
             }
             if (getBoardVariables() == 64) {
@@ -136,7 +138,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(row * 10 + finalRightVector));
                     }
                     while (!board[DURVector][DRUVector].equals("") && DURVector > 0 && DRUVector < 7) {
-                        if (board[DURVector][DRUVector].equals(opponent)  && board[DURVector - 1][ DRUVector + 1].equals("")) {
+                        if (board[DURVector][DRUVector].equals(opponent) && board[DURVector - 1][DRUVector + 1].equals("")) {
                             finalDURVector = DURVector - 1;
                             finalDRUVector = DRUVector + 1;
                         }
@@ -147,7 +149,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(finalDURVector * 10 + finalDRUVector));
                     }
                     while (!board[DULVector][DLUVector].equals("") && DULVector > 0 && DLUVector > 0) {
-                        if (board[DULVector][DLUVector].equals(opponent)  && board[DULVector - 1][DLUVector - 1].equals("")) {
+                        if (board[DULVector][DLUVector].equals(opponent) && board[DULVector - 1][DLUVector - 1].equals("")) {
                             finalDULVector = DULVector - 1;
                             finalDLUVector = DLUVector - 1;
                         }
@@ -158,7 +160,7 @@ public class Model implements MessageHandler {
                         possibleCords.add(Integer.toString(finalDULVector * 10 + finalDLUVector));
                     }
                     while (!board[DBRVector][DRBVector].equals("") && DBRVector < 7 && DRBVector < 7) {
-                        if (board[DBRVector][DRBVector].equals(opponent)  && board[DBRVector + 1][DRBVector + 1].equals("")) {
+                        if (board[DBRVector][DRBVector].equals(opponent) && board[DBRVector + 1][DRBVector + 1].equals("")) {
                             finalDBRVector = DBRVector + 1;
                             finalDRBVector = DRBVector + 1;
                         }
@@ -170,7 +172,7 @@ public class Model implements MessageHandler {
                     }
 
                     while (!board[DBLVector][DLBVector].equals("") && DBLVector < 7 && DLBVector > 0) {
-                        if (board[DBLVector][DLBVector].equals(opponent)  && board[DBLVector + 1][DLBVector - 1].equals("")) {
+                        if (board[DBLVector][DLBVector].equals(opponent) && board[DBLVector + 1][DLBVector - 1].equals("")) {
                             finalDBLVector = DBLVector + 1;
                             finalDLBVector = DLBVector - 1;
                         }
@@ -187,7 +189,34 @@ public class Model implements MessageHandler {
 
     public void placeMove(int row, int col) {
         String currentPlayer = (this.whoseMove) ? "X" : "O";
-        board[row][col] = currentPlayer;
+        String opponent = (!this.whoseMove) ? "X" : "O";
+        if (board[row][col].equals("")) {
+            for (int dr = -1; dr <= 1; dr++) {
+                for (int dc = -1; dc <= 1; dc++) {
+                    if (dr == 0 && dc == 0) {
+                        continue;
+                    }
+                    int r = row + dr;
+                    int c = col + dc;
+                    boolean foundOpponent = false;
+                    while (r >= 0 && r < 8 && c >= 0 && c < 8 && board[r][c].equals(opponent)) {
+                        r += dr;
+                        c += dc;
+                        foundOpponent = true;
+                    }
+                    if (foundOpponent && r >= 0 && r < 8 && c >= 0 && c < 8 && board[r][c].equals(currentPlayer)) {
+                        r -= dr;
+                        c -= dc;
+                        while (r != row || c != col) {
+                            board[r][c] = currentPlayer;
+                            r -= dr;
+                            c -= dc;
+                        }
+                    }
+                }
+            }
+            board[row][col] = currentPlayer;
+        }
     }
 
     public void xWin() {
@@ -260,11 +289,11 @@ public class Model implements MessageHandler {
         }
         return false;
     }
-    
+
     public int getBoardVariables() {
         int count = 0;
         for (String[] s : board) {
-            for (String x: s) {
+            for (String x : s) {
                 if (!x.equals("")) {
                     count++;
                 }
