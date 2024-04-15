@@ -189,7 +189,7 @@ public class Model implements MessageHandler {
         }
     }
 
-    public void placeMove(int row, int col) {
+    /*public void placeMove(int row, int col) {
         removeShowMoves();
         String currentPlayer = (this.whoseMove) ? "X" : "O";
         String opponent = (!this.whoseMove) ? "X" : "O";
@@ -220,6 +220,46 @@ public class Model implements MessageHandler {
             }
             board[row][col] = currentPlayer;
         }
+    }*/
+    public void placeMove(int row, int col) {
+        removeShowMoves();
+        String currentPlayer = (this.whoseMove) ? "X" : "O";
+        board[row][col] = currentPlayer;
+        ArrayList<String> discsFlipped = new ArrayList<>();
+        for (int rowChange = -1; rowChange <= 1; rowChange++) {
+            for (int colChange = -1; colChange <= 1; colChange++) {
+                if (rowChange != 0 || colChange != 0) {
+                    ArrayList<String> newMoves = discsFlipped(row, col, rowChange, colChange, currentPlayer);
+                    discsFlipped.addAll(newMoves);
+                }
+            }
+        }
+        for (String position : discsFlipped) {
+            int discRow = Integer.parseInt(position.substring(0, 1));
+            int discCol = Integer.parseInt(position.substring(1, 2));
+            board[discRow][discCol] = currentPlayer;
+        }
+    }
+
+    public ArrayList<String> discsFlipped(int row, int col, int incrementRow, int incrementCol, String player) {
+        String opponentPlayer = (!this.whoseMove) ? "X" : "O";
+        ArrayList<String> moves = new ArrayList<>();
+        int moveRow = row + incrementRow;
+        int moveCol = col + incrementCol;
+        boolean opponentFound = true;
+        while (moveRow >= 0 && moveRow <= 8 && moveCol >= 0 && moveCol <= 8 && opponentFound) {
+            if (board[moveRow][moveCol].equals(opponentPlayer)) {
+                moves.add(Integer.toString(moveRow) + Integer.toString(moveCol));
+                moveRow += incrementRow;
+                moveCol += incrementCol;
+            } else if (board[moveRow][moveCol].equals(player)) {
+                opponentFound = false;
+            } else if (board[moveRow][moveCol].equals("")) {
+                opponentFound = false;
+                moves.clear();
+            }
+        }
+        return moves;
     }
 
     public void xWin() {
