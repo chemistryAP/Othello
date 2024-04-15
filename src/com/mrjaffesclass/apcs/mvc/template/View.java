@@ -1,4 +1,5 @@
 package com.mrjaffesclass.apcs.mvc.template;
+
 import com.mrjaffesclass.apcs.messenger.*;
 import javax.swing.JButton;
 import java.awt.Color;
@@ -73,11 +74,19 @@ public class View extends javax.swing.JFrame implements MessageHandler {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 buttons[buttonIndex].setText(board[row][col]);
+                Color currentColor = buttons[buttonIndex].getBackground();
+                if (currentColor.equals(Color.YELLOW)) {
+                    buttons[buttonIndex].setBackground(new Color(0, 153, 0));
+                }
                 if (board[row][col].equals("O")) {
                     buttons[buttonIndex].setForeground(Color.WHITE);
                 }
                 if (board[row][col].equals("X")) {
                     buttons[buttonIndex].setForeground(Color.BLACK);
+                }
+                if (board[row][col].equals("M")) {
+                    buttons[buttonIndex].setText("");
+                    buttons[buttonIndex].setBackground(Color.YELLOW);
                 }
                 buttonIndex++;
             }

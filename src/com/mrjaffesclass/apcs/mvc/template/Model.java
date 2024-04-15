@@ -38,6 +38,7 @@ public class Model implements MessageHandler {
                     placeMove(row, col);
                     this.whoseMove = !this.whoseMove;
                     possibleMoves();
+                    showMoves();
                     boardChange();
                     if (this.whoseMove) {
                         this.mvcMessaging.notify("xMove", this);
@@ -52,6 +53,7 @@ public class Model implements MessageHandler {
             } else {
                 this.whoseMove = !this.whoseMove;
                 possibleMoves();
+                showMoves();
                 if (possibleCords.isEmpty()) {
                     if (getWinner().equals("X")) {
                         xWin();
@@ -188,6 +190,7 @@ public class Model implements MessageHandler {
     }
 
     public void placeMove(int row, int col) {
+        removeShowMoves();
         String currentPlayer = (this.whoseMove) ? "X" : "O";
         String opponent = (!this.whoseMove) ? "X" : "O";
         if (board[row][col].equals("")) {
@@ -263,6 +266,7 @@ public class Model implements MessageHandler {
         this.whoseMove = false;
         this.gameOver = false;
         possibleMoves();
+        showMoves();
         boardChange();
     }
 
@@ -281,6 +285,26 @@ public class Model implements MessageHandler {
         return (xCount > oCount) ? "X" : (oCount > xCount) ? "O" : "tie";
     }
 
+    private void showMoves() {
+        for (int row = 0; row < this.board.length; row++) {
+            for (int col = 0; col < this.board[0].length; col++) {
+                if (possibleCords.contains(Integer.toString(row * 10 + col))) {
+                    board[row][col] = "M";
+                }
+            }
+        }
+    }
+
+    private void removeShowMoves() {
+        for (int row = 0; row < this.board.length; row++) {
+            for (int col = 0; col < this.board[0].length; col++) {
+                if (board[row][col].equals("M")) {
+                    board[row][col] = "";
+                }
+            }
+        }
+    }
+
     public boolean containsCord(String str) {
         for (String s : possibleCords) {
             if (s.equals(str)) {
@@ -294,7 +318,7 @@ public class Model implements MessageHandler {
         int count = 0;
         for (String[] s : board) {
             for (String x : s) {
-                if (!x.equals("")) {
+                if (!x.equals("") && !x.equals("M")) {
                     count++;
                 }
             }
