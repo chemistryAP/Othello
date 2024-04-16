@@ -247,7 +247,7 @@ public class Model implements MessageHandler {
         int moveRow = row + incrementRow;
         int moveCol = col + incrementCol;
         boolean opponentFound = true;
-        while (moveRow >= 0 && moveRow <= 8 && moveCol >= 0 && moveCol <= 8 && opponentFound) {
+        while (moveRow >= 0 && moveRow <= 7 && moveCol >= 0 && moveCol <= 7 && opponentFound) {
             if (board[moveRow][moveCol].equals(opponentPlayer)) {
                 moves.add(Integer.toString(moveRow) + Integer.toString(moveCol));
                 moveRow += incrementRow;
